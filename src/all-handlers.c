@@ -81,7 +81,7 @@ if the new message is not being used, then the unused error needs to be suppress
 #define _(a_id,a_msg,a_crc) \
         __attribute__ ((unused)) \
         static inline void send_new_ ## a_msg ## _ ## a_crc ## _handler(void *mp0, int do_copy) { \
-                api_main_t *am = &api_main; \
+                api_main_t *am = apicompat_api_1908_get_main(); \
                 void *mp = mp0; \
                 if (do_copy) { \
                   u32 len = vl_msg_api_get_msg_length(mp0); \

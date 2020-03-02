@@ -51,12 +51,15 @@ sed -i -e 's#vl_api_#vl_1908_api_#g' $DST/*.[ch]
 
 mkdir -p src_1908/vnet_1908
 cp ../../../src/vnet/vnet_all_api_h.h src_1908/vnet_1908/
-sed -i -e 's#vnet/#vnet_1908/#g' $(find src_1908/vnet_1908/ -name '*.[ch]')
+# sed -i -e 's#vnet/#vnet_1908/#g' $(find src_1908/vnet_1908/ -name '*.[ch]')
+sed -i -e 's#vnet/#vnet_1908/#g' $(find src_1908/ -name '*.[ch]')
 
 
 find src_1908/ -name '*.api.h' -exec sed -i -e 's#vl_api_#vl_1908_api_#g' {} \;
-find src_1908/ -name '*.api_types.h' -exec sed -i -e 's#vl_api_#vl_1908_api_#g' {} \;
+find src_1908/ -name '*.api_types.h' -exec sed -i -e 's#vl_api_#vl_1908_api_#g' {} \; -printf "Fix up api_types: %f\n"
 find src_1908/ -name '*.[ch]' -exec sed -i \
+	-e 's#<lb/#<plugins_1908/lb/#g' \
+	-e 's#<acl/#<plugins_1908/acl/#g' \
         -e 's/vlibapi_get_main/vlibapi_1908_get_main/g' \
         -e 's/vlibapi_set_main/vlibapi_1908_set_main/g' \
         -e 's#api_global_main#api_1908_global_main#g' \
@@ -118,7 +121,6 @@ find src_1908/ -name '*.[ch]' -exec sed -i \
 	-e 's# VXLAN_GBP_# VXLAN_GBP_1908_#g' \
 	-e 's# GRE_# GRE_1908_#g' \
 	-e 's# BRIDGE_# BRIDGE_1908_#g' \
-	-e 's# L2_# L2_1908_#g' \
 	-e 's# MFIB_# MFIB_1908_#g' \
 	-e 's# PUNT_# PUNT_1908_#g' \
 	-e 's#ADDRESS_IP4#ADDRESS_1908_IP4#g' \
@@ -127,14 +129,48 @@ find src_1908/ -name '*.[ch]' -exec sed -i \
 	-e 's# INCLUDE# INCLUDE_1908#g' \
 	-e 's# ASM# ASM_1908#g' \
 	-e 's# SSM# SSM_1908#g' \
+	-e 's#_API_#_API_1908_#g' \
+	-e 's#TAP_FLAG_#TAP_FLAG_1908_#g' \
+	-e 's#FLOWPROBE_WHICH_FLAG_#FLOWPROBE_WHICH_FLAG_1908_#g' \
+	-e 's#FLOWPROBE_RECORD_FLAG_#FLOWPROBE_RECORD_FLAG_1908_#g' \
+	-e 's#memory_client_main_t#memory_client_1908_main_t#g' \
+	-e 's#<vnet_1908/format_fns.h>#<vnet/format_fns.h>#g' \
+	-e 's#<vnet_1908/vnet.h>#<vnet/vnet.h>#g' \
+	-e 's#<vnet_1908/api_errno.h>#<vnet/api_errno.h>#g' \
+	-e 's#<vnet_1908/ip/ip.h>#<vnet/ip/ip.h>#g' \
+	-e 's#<vnet_1908/ip/format.h>#<vnet/ip/format.h>#g' \
+	-e 's#<vnet_1908/ip/ip_neighbor.h>#<vnet/ip/ip_neighbor.h>#g' \
+	-e 's#<vnet_1908/ip/ip_types_api.h>#<vnet/ip/ip_types_api.h>#g' \
+	-e 's#<vnet_1908/fib/fib_api.h>#<vnet/fib/fib_api.h>#g' \
+	-e 's#<vnet_1908/unix/tuntap.h>#<vnet/unix/tuntap.h>#g' \
+	-e 's#<vnet_1908/mpls/mpls.h>#<vnet/mpls/mpls.h>#g' \
+	-e 's#<vnet_1908/dhcp/dhcp_proxy.h>#<vnet/dhcp/dhcp_proxy.h>#g' \
+	-e 's#<vnet_1908/l2tp/l2tp.h>#<vnet/l2tp/l2tp.h>#g' \
+	-e 's#<vnet_1908/l2/l2_input.h>#<vnet/l2/l2_input.h>#g' \
+	-e 's#<vnet_1908/srv6/sr.h>#<vnet/srv6/sr.h>#g' \
+	-e 's#<vnet_1908/srmpls/sr_mpls.h>#<vnet/srmpls/sr_mpls.h>#g' \
+	-e 's#<vnet_1908/gre/gre.h>#<vnet/gre/gre.h>#g' \
+	-e 's#<vnet_1908/vxlan-gpe/vxlan_gpe.h>#<vnet/vxlan-gpe/vxlan_gpe.h>#g' \
+	-e 's#<vnet_1908/geneve/geneve.h>#<vnet/geneve/geneve.h>#g' \
+	-e 's#<vnet_1908/classify/policer_classify.h>#<vnet/classify/policer_classify.h>#g' \
+	-e 's#<vnet_1908/policer/xlate.h>#<vnet/policer/xlate.h>#g' \
+	-e 's#<vnet_1908/policer/policer.h>#<vnet/policer/policer.h>#g' \
+	-e 's#<vnet_1908/classify/flow_classify.h>#<vnet/classify/flow_classify.h>#g' \
+	-e 's#<vnet_1908/lisp-cp/lisp_types.h>#<vnet/lisp-cp/lisp_types.h>#g' \
+	-e 's#<vnet_1908/qos/qos_types.h>#<vnet/qos/qos_types.h>#g' \
+	-e 's#<vnet_1908/ethernet/ethernet.h>#<vnet/ethernet/ethernet.h>#g' \
+	-e 's#<vnet_1908/ethernet/ethernet_types_api.h>#<vnet/ethernet/ethernet_types_api.h>#g' \
+	-e 's#<vnet_1908/l2/l2_vtr.h>#<vnet/l2/l2_vtr.h>#g' \
+	-e 's#<vnet_1908/bonding/node.h>#<vnet/bonding/node.h>#g' \
+	-e 's#VNET_API_1908_ERROR_#VNET_API_ERROR_#g' \
+	-e 's#VNET_API_ERROR_API_1908_ENDIAN_FAILED#VNET_API_ERROR_API_ENDIAN_FAILED#g' \
+	-e 's#format_vl_1908_api_#format_vl_api_#g' \
 	{} \;
 
 
 sed -i \
-	-e 's#L2_API_#L2_1908_API_#g' \
-	-e 's#L2_1908_#L2_#g' \
 	-e 's#L2_API_PORT_TYPE#L2_1908_API_PORT_TYPE#g' \
-	-e 's#IP_API_NEIGHBOR_FLAG_#IP_1908_API_NEIGHBOR_FLAG_#g' \
+	-e 's#IP_API_#IP_1908_API_#g' \
 	-e 's#IP_1908_SCAN_#IP_SCAN_#g' \
 	-e 's#format_vl_1908_api_fib_path#format_vl_api_fib_path#g' \
 	src_1908/vpp_1908/api/custom_dump.c

@@ -109,7 +109,13 @@ value_sort_cmp (void *a1, void *a2)
   return 0;
 }
 
-api_1908_main_t *apicompat_api_1908_get_main() {
+void *apicompat_api_1908_get_main() {
+	// return vlibapi_get_main();
+	return &api_main;
+}
+
+void *apicompat_api_1908_get_1908_main() {
+	// return vlibapi_1908_get_main();
 	return &api_1908_main;
 }
 
@@ -119,7 +125,7 @@ api1908_dump_table_command_fn (vlib_main_t * vm,
 			       unformat_input_t * input,
 			       vlib_cli_command_t * cmd)
 {
-  api_1908_main_t *am = apicompat_api_1908_get_main();
+  api_1908_main_t *am = apicompat_api_1908_get_1908_main();
   name_sort_t *nses = 0, *ns;
   hash_pair_t *hp;
   int i;
@@ -559,7 +565,7 @@ api_1908_compat_config_fn (vlib_main_t * vm, unformat_input_t * input)
   clib_warning ("API1908COMPAT uplink msg ranges: %d",
 		vec_len (am->msg_ranges));
 
-  vec_foreach (r, api_main->msg_ranges)
+  vec_foreach (r, am->msg_ranges)
   {
     clib_warning ("'%s' %d-%d", r->name, r->first_msg_id, r->last_msg_id);
   }

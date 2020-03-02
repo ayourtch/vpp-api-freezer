@@ -70,6 +70,10 @@ void handle_reflect_message (u32 index, u8 * data);
 
 u32 get_api1908compat_upclient_index (u32 downward_index);
 
+void *apicompat_api_1908_get_main(void);
+void *apicompat_api_1908_get_1908_main(void);
+
+
 
 #endif /* __included_api1908compat_h__ */
 
