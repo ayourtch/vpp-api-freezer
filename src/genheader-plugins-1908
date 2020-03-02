@@ -1,0 +1,46 @@
+find . -name '*.api.h' -printf '%f %P\n' | \
+  grep 'plugins' | \
+  grep -v 'compat' | \
+  perl -npe 's|([^\.]*)\.[^ ]*|\1|;' | \
+  perl -npe 's|^(\S+)\s(\S+)$|"
+
+#ifdef vl_1908_compat_api_version
+
+#undef vl_1908_plugin_name
+#undef vl_1908_plugin_name_indirect
+#define vl_1908_plugin_name $1
+
+
+#define vl_1908_api_version(n, crc) vl_1908_compat_api_version($1, crc) 
+#include \"$2\"
+#undef vl_1908_api_version
+
+#ifdef vl_1908_msg_name_crc_list
+#include \"$2\"
+foreach_vl_1908_msg_name_crc_$1
+#undef foreach_vl_1908_msg_name_crc_$1
+#endif
+
+#ifdef vl_1908_compat_api_version_trailer
+#define vl_1908_api_version(n, crc) vl_1908_compat_api_version_trailer ($1, crc)
+#include \"$2\"
+#undef vl_1908_api_version
+
+#endif
+
+#undef vl_1908_plugin_name
+#undef vl_1908_plugin_name_indirect
+
+#else
+
+#include \"$2\"
+#ifdef vl_1908_msg_name_crc_list
+foreach_vl_1908_msg_name_crc_$1
+#undef foreach_vl_1908_msg_name_crc_$1
+#endif
+
+#endif
+
+";|ge;'
+
+

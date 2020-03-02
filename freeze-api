@@ -1,0 +1,52 @@
+#!/bin/sh
+set -eux
+
+
+export REALPATH=`which realpath`
+export DIRNAME=`which dirname`
+
+if [ ! -e "$REALPATH" ]; then
+  echo "can not find realpath"
+  exit
+fi
+if [ ! -e "$DIRNAME" ]; then
+  echo "can not find dirname"
+  exit
+fi
+
+MYPATH=`$REALPATH $0`
+MYDIR=`$DIRNAME $MYPATH`
+GITROOT=`git rev-parse --show-toplevel`
+
+FRZVER=$1; 
+
+echo "Freezing now the API with version: ${FRZVER}"
+if grep -r ${FRZVER} ${GITROOT}/src/; then
+	echo "Already have ${FRZVER} somewhere in the files. Can't do that."
+	exit 1;
+fi
+if grep -r ${FRZVER} ${MYDIR}/src/; then
+	echo "Already have ${FRZVER} somewhere in the files. Can't do that."
+	exit 1;
+fi
+
+APICOMPAT_PLUGIN_DIR="${GITROOT}/src/plugins/api${FRZVER}compat"
+rm -rf $APICOMPAT_PLUGIN_DIR
+mkdir -p $APICOMPAT_PLUGIN_DIR
+
+cp ${MYDIR}/src/CMakeLists.txt $APICOMPAT_PLUGIN_DIR/
+cp ${MYDIR}/src/all-handlers.c $APICOMPAT_PLUGIN_DIR/
+cp ${MYDIR}/src/api1908compat.c $APICOMPAT_PLUGIN_DIR/api${FRZVER}compat.c
+cp ${MYDIR}/src/api1908compat.h $APICOMPAT_PLUGIN_DIR/api${FRZVER}compat.h
+cp ${MYDIR}/src/api1908downlink.c $APICOMPAT_PLUGIN_DIR/api${FRZVER}downlink.c
+cp ${MYDIR}/src/api1908uplink.c $APICOMPAT_PLUGIN_DIR/api${FRZVER}uplink.c
+cp ${MYDIR}/src/copy-source $APICOMPAT_PLUGIN_DIR/
+cp ${MYDIR}/src/custom-codegen.h $APICOMPAT_PLUGIN_DIR/
+cp ${MYDIR}/src/genheader-plugins-1908 $APICOMPAT_PLUGIN_DIR/genheader-plugins-${FRZVER}
+cp ${MYDIR}/src/genheader-plugins-curr $APICOMPAT_PLUGIN_DIR/
+cp ${MYDIR}/src/handler-new-to-old.h $APICOMPAT_PLUGIN_DIR/
+cp ${MYDIR}/src/handler-old-to-new.h $APICOMPAT_PLUGIN_DIR/
+
+sed -i -e "s#1908#${FRZVER}#g" $APICOMPAT_PLUGIN_DIR/*
+
+(cd $APICOMPAT_PLUGIN_DIR; ./copy-source)
