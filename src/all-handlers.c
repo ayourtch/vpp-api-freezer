@@ -169,7 +169,7 @@ extern void vl_reflect_api_set_handlers (int id, void *handler);
  * possibly with copy, to the 1908 API side.
  *
 		  clib_warning("HEAP: %p, msg: %p, omsg: %p", am->vlib_rp, mp, mp0); \
-	          api_1908_main_t *am = &api_1908_main; \
+	          api_1908_main_t *am = apicompat_api_1908_get_1908_main(); \
 	          pthread_mutex_lock (&am->vlib_rp->mutex); \
 	          void *oldheap = svm_push_data_heap (am->vlib_rp); \
 	          svm_pop_heap (oldheap); \
@@ -210,7 +210,7 @@ extern void vl_reflect_api_set_handlers (int id, void *handler);
 #define _(a_id,a_msg,a_crc) \
 	static void vl_1908_api_ ## a_msg ## _ ## a_crc ## _t_print_handler(vl_1908_api_ ## a_msg ## _t *om) { \
 		CLIB_UNUSED (vlib_main_t * vm) = vlib_get_main (); \
-		vl_1908_api_ ## a_msg ## _t_print(om, vm); \
+		/* FIXME vl_1908_api_ ## a_msg ## _t_print(om, vm); */ \
 	}  \
 
 #include "all-headers-1908.h"
@@ -220,7 +220,7 @@ extern void vl_reflect_api_set_handlers (int id, void *handler);
 clib_error_t *
 api_hookup_api1908compat (vlib_main_t * vm)
 {
-  api_1908_main_t *am = &api_1908_main;
+  api_1908_main_t *am = apicompat_api_1908_get_1908_main();
 #define vl_1908_msg_name_crc_list
 #define _(N,A_MSG, A_CRC)                                                  \
     vl_1908_msg_api_set_handlers(N, (#A_MSG),                     \
@@ -317,7 +317,7 @@ api_hookup_plugins_api1908compat (vlib_main_t * vm)
 
 #define vl_compat_api_version(name, crc) \
         static void inline api_try_hookup_api_ ## name ## _plugin_curr(vlib_main_t * vm) {   \
-              CLIB_UNUSED(api_main_t *am) = &api_main; \
+              CLIB_UNUSED(api_main_t *am) = apicompat_api_1908_get_main(); \
               CLIB_UNUSED(u16 this_msg_number) = name ## _curr_base_msg_id; \
                 if (this_msg_number == 0 || this_msg_number == 65535) { return ; } \
 
@@ -404,7 +404,7 @@ __attribute__ ((unused))
 
 #define vl_1908_compat_api_version(name, crc) \
         void api_try_hookup_api_ ## name ## _plugin_1908(vlib_main_t * vm) {   \
-              CLIB_UNUSED(api_1908_main_t *am) = &api_1908_main; \
+              CLIB_UNUSED(api_1908_main_t *am) = apicompat_api_1908_get_1908_main(); \
               CLIB_UNUSED(u16 this_msg_number) = name ## _1908_base_msg_id; \
                 if (this_msg_number == 0 || this_msg_number == 65535) { return ; } \
 

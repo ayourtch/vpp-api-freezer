@@ -50,7 +50,7 @@ void send_keepalive_reply(svm_queue_t *q, void *data) {
 void handle_upstream_message(int index, void *data) {
       // u32 len = vl_msg_api_get_msg_length(data);
       u16 msg_id = clib_net_to_host_u16(*(u16 *)data);
-      api_main_t *am = &api_main;
+      api_main_t *am = apicompat_api_1908_get_1908_main();
       // clib_warning("Message id: %d, len: %d", msg_id, len);
       if (msg_id == 21) {
       	send_keepalive_reply(am->shmem_hdr->vl_input_queue, data);

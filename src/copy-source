@@ -161,6 +161,7 @@ find src_1908/ -name '*.[ch]' -exec sed -i \
 	-e 's#<vnet_1908/ethernet/ethernet.h>#<vnet/ethernet/ethernet.h>#g' \
 	-e 's#<vnet_1908/ethernet/ethernet_types_api.h>#<vnet/ethernet/ethernet_types_api.h>#g' \
 	-e 's#<vnet_1908/l2/l2_vtr.h>#<vnet/l2/l2_vtr.h>#g' \
+	-e 's#<vnet_1908/ip-neighbor/ip_neighbor.h>#<vnet/ip-neighbor/ip_neighbor.h>#g' \
 	-e 's#<vnet_1908/bonding/node.h>#<vnet/bonding/node.h>#g' \
 	-e 's#VNET_API_1908_ERROR_#VNET_API_ERROR_#g' \
 	-e 's#VNET_API_ERROR_API_1908_ENDIAN_FAILED#VNET_API_ERROR_API_ENDIAN_FAILED#g' \
