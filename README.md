@@ -19,6 +19,16 @@ This will create a plugin called "apiv1908compat", that will create an API endpo
 given label "v1908". It will also create a series of CLI commands "show api v1908 ..." which will function
 similar to the familiar "show api ..." ones. 
 
+It will also create corresponding startup config syntax, thus specifying both unix sockets is done this way:
+
+```
+./build-root/install-vpp_debug-native/vpp/bin/vpp unix { interactive cli-listen /run/vpp/cli.sock gid 1000 } socksvr { default } nat { endpoint-dependent } socksvr_v1908 { default } 
+```
+
+The shared memory listener will be at /dev/shm/vpe-api-<endpoint>.
+
+
+
 # Caveats / quirks / findings
 
 ## Message structure inconsistency / lack of ability to introspect
