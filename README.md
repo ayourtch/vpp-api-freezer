@@ -25,7 +25,7 @@ It will also create corresponding startup config syntax, thus specifying both un
 ./build-root/install-vpp_debug-native/vpp/bin/vpp unix { interactive cli-listen /run/vpp/cli.sock gid 1000 } socksvr { default } nat { endpoint-dependent } socksvr_v1908 { default } 
 ```
 
-The shared memory listener will be at /dev/shm/vpe-api-<endpoint>.
+The shared memory listener will be at /dev/shm/vpe-api-v1908.
 
 
 
